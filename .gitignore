@@ -1,5 +1,13 @@
 # Node.js dependencies
 node_modules/
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
 
 # Logs
 logs/
@@ -9,7 +17,11 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment variables
-.env
+.env*
+.env.local
+.env.development
+.env.production
+.env.test
 
 # Build output
 dist/

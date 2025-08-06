@@ -1,5 +1,6 @@
 extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
+include ../../mixins/pagination.pug
 
 block main 
     h1 Danh sách sản phẩm
@@ -62,26 +63,4 @@ block main
                                 button(class="btn btn-danger btn-sm ms-2") Xóa
 
 
-    nav 
-        ul(class="pagination")
-
-            if pagination.currentPage > 1
-                li(class="page-item")
-                    button(
-                        class="page-link",
-                        button-pagination=pagination.currentPage - 1
-                    ) Trang trước
-
-            - for (i = 1; i <= pagination.totalPages; i++)
-                li(class=`page-item ${i === pagination.currentPage ? 'active' : ''}`)
-                    button(
-                        class="page-link"
-                        button-pagination=i
-                        ) #{i}
-
-            if pagination.currentPage < pagination.totalPages
-                li(class="page-item")
-                    button(
-                        class="page-link",
-                        button-pagination=pagination.currentPage + 1
-                    ) Kế tiếp
+    +pagination(pagination)

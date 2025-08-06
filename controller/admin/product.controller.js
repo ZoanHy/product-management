@@ -53,25 +53,38 @@ module.exports.index = async (req, res) => {
     })
 }
 
-// [GET] /admin/products/change-status/:status/:id
+// [PATCH] /admin/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
     // console.log(req.params);
     const { status, id } = req.params;
-
-    // await Product.findByIdAndUpdate(id, { availabilityStatus: status }, { new: true })
-    //     .then(product => {
-    //         if (!product) {
-    //             return res.status(404).send("Product not found");
-    //         }
-    //         res.redirect('back');
-    //     })
-    //     .catch(err => {
-    //         console.error(err);
-    //         res.status(500).send("Server error");
-    //     });
 
     await Product.updateOne({ _id: id }, { availabilityStatus: status });
 
     const previousPage = req.get('Referrer') || '/';
     res.redirect(previousPage);
+}
+
+// [PATCH] /admin/products/change-multi
+module.exports.changeMulti = async (req, res) => {
+    // console.log(req.body);
+
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+
+    // console.log(type);
+    // console.log(ids);
+
+    switch (type) {
+        case "In Stock":
+            await Product.updateMany({ _id: { $in: ids } }, { availabilityStatus: "In Stock" });
+            break;
+        case "Out of Stock":
+            await Product.updateMany({ _id: { $in: ids } }, { availabilityStatus: "Out of Stock" });
+            break;
+    }
+
+    const previousPage = req.get('Referrer') || '/';
+    res.redirect(previousPage);
+
+    // res.send('pk')
 }

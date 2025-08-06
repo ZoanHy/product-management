@@ -1,6 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/pagination.pug
+include ../../mixins/search.pug
+include ../../mixins/form-change-multi.pug
 
 block main 
     h1 Danh sách sản phẩm
@@ -12,27 +14,21 @@ block main
                 .col-6
                     +filterStatus(filterStatus)
                 .col-6
-                    form(id='form-search')
-                        .input-group 
-                            input(
-                                type="text",
-                                class="form-control",
-                                placeholder="Nhập từ khóa",
-                                name="keyword",
-                                value=keyword
-                            )
-                            .input-group-append
-                                button(
-                                    class="btn btn-success",
-                                    type="submit"
-                                ) Tìm kiếm
+                    +search(keyword)
 
     .card.mb-3 
         .card-header Danh sách
         .card-body    
-            table.table.table-hover.table-sm 
+            +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+
+            table(
+                class="table table-hover table-sm"
+                checkbox-multi
+            )    
                 thead 
-                    tr 
+                    tr
+                        th
+                            input(type="checkbox" name="check-all") 
                         th STT 
                         th Hình ảnh
                         th Tiêu đề
@@ -43,6 +39,13 @@ block main
                 tbody
                     each item, index in products
                         tr
+                            td 
+                                input(
+                                    type="checkbox"
+                                    name="id"
+                                    value=item.id
+                                    class="form-check-input"
+                                )
                             td= index + 1
                             td 
                                 img(

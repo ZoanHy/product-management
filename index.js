@@ -3,6 +3,7 @@ require('dotenv').config()
 // Importing required modules
 const express = require('express')
 var methodOverride = require('method-override')
+const bodyParser = require('body-parser')
 const database = require('./config/database.js')
 
 const systemConfig = require('./config/system.js')
@@ -23,6 +24,11 @@ app.use(methodOverride('_method'))
 // Setting up view engine
 app.set('views', './views')
 app.set('view engine', 'pug')
+
+app.use(bodyParser.urlencoded())
+
+// parse application/json
+app.use(bodyParser.json())
 
 // App locals variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;;

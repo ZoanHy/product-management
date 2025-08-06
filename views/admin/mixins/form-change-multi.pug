@@ -1,0 +1,23 @@
+mixin form-change-multi(path)
+    form(
+        action=path
+        method="POST"
+        form-change-multi
+    )
+        .d-flex.align-items-start
+            .form-group
+                select(name="type" class="form-select")
+                    option(value="In Stock") Còn hàng
+                    option(value="Out of Stock") Hết hàng
+            .form-group
+                input(
+                    type="text"
+                    name="ids"
+                    value=""
+                    class="form-control"
+                )
+            button(
+                type="submit"
+                class="btn btn-primary ms-2"
+                form-change-multi-submit
+            ) Áp dụng

@@ -1,44 +1,12 @@
 const Product = require('../../models/product.model.js');
 
-// [GET] /admin/products
+const filterStatusHelper = require('../../helpers/filterStatus.js');
+const searchHelper = require('../../helpers/search.js');
 
+// [GET] /admin/products
 module.exports.index = async (req, res) => {
 
-    let filterStatus = [
-        {
-            name: "Tất cả",
-            status: "",
-            class: ""
-        },
-        {
-            name: "Còn hàng",
-            status: "In Stock",
-            class: ""
-        },
-        {
-            name: "Hết hàng",
-            status: "Out of Stock",
-            class: ""
-        }
-    ]
-
-    if (req.query.availabilityStatus) {
-        const index = filterStatus.findIndex(item => item.status == req.query.availabilityStatus);
-        filterStatus[index].class = "active";
-
-
-        // filterStatus.forEach(item => {
-        //     if (item.status === req.query.availabilityStatus) {
-        //         item.class = "active";
-        //     } else {
-        //         item.class = "";
-        //     }
-        // });
-    } else {
-        const index = filterStatus.findIndex(item => item.status == "");
-        filterStatus[index].class = "active";
-
-    }
+    const filterStatus = filterStatusHelper(req.query);
 
     // console.log(req.query.availabilityStatus);
 
@@ -51,10 +19,17 @@ module.exports.index = async (req, res) => {
         findProducts.availabilityStatus = req.query.availabilityStatus;
     }
 
-    let keyword = "";
-    if (req.query.keyword) {
-        keyword = req.query.keyword;
-        findProducts.title = { $regex: keyword, $options: "i" }; // Case-insensitive search using regex
+    // let keyword = "";
+    // if (req.query.keyword) {
+    //     keyword = req.query.keyword;
+    //     findProducts.title = { $regex: keyword, $options: "i" }; // Case-insensitive search using regex
+    // }
+
+
+    const objectSearch = searchHelper(req.query);
+
+    if (objectSearch.regex) {
+        findProducts.title = objectSearch.regex; // Apply the regex for case-insensitive search
     }
 
     const products = await Product.find(findProducts);
@@ -65,6 +40,6 @@ module.exports.index = async (req, res) => {
         pageTitle: "Danh sách sản phẩm",
         products: products,
         filterStatus: filterStatus,
-        keyword: keyword
+        keyword: objectSearch.keyword
     })
 }

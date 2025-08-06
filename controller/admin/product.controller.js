@@ -43,11 +43,18 @@ module.exports.index = async (req, res) => {
     // console.log(req.query.availabilityStatus);
 
     let findProducts = {
-        deleted: false
+        deleted: false,
+        // title: "Red Lipstick"
     }
 
     if (req.query.availabilityStatus) {
         findProducts.availabilityStatus = req.query.availabilityStatus;
+    }
+
+    let keyword = "";
+    if (req.query.keyword) {
+        keyword = req.query.keyword;
+        findProducts.title = { $regex: keyword, $options: "i" }; // Case-insensitive search using regex
     }
 
     const products = await Product.find(findProducts);
@@ -57,6 +64,7 @@ module.exports.index = async (req, res) => {
     res.render("admin/pages/products/index", {
         pageTitle: "Danh sách sản phẩm",
         products: products,
-        filterStatus: filterStatus
+        filterStatus: filterStatus,
+        keyword: keyword
     })
 }

@@ -6,6 +6,7 @@ const searchHelper = require('../../helpers/search.js');
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
 
+    // Filter status helper
     const filterStatus = filterStatusHelper(req.query);
 
     // console.log(req.query.availabilityStatus);
@@ -19,20 +20,32 @@ module.exports.index = async (req, res) => {
         findProducts.availabilityStatus = req.query.availabilityStatus;
     }
 
-    // let keyword = "";
-    // if (req.query.keyword) {
-    //     keyword = req.query.keyword;
-    //     findProducts.title = { $regex: keyword, $options: "i" }; // Case-insensitive search using regex
-    // }
-
-
+    // Search helper
     const objectSearch = searchHelper(req.query);
 
     if (objectSearch.regex) {
         findProducts.title = objectSearch.regex; // Apply the regex for case-insensitive search
     }
 
-    const products = await Product.find(findProducts);
+    // Pagination
+
+    let objectPagination = {
+        currentPage: 1,
+        limitItems: 5
+    }
+
+    if (req.query.page) {
+        objectPagination.currentPage = parseInt(req.query.page);
+    }
+
+    objectPagination.skip = (objectPagination.currentPage - 1) * objectPagination.limitItems;
+
+    const countProducts = await Product.countDocuments(findProducts);
+    const totalPages = Math.ceil(countProducts / objectPagination.limitItems);
+    // console.log(totalPages);
+    objectPagination.totalPages = totalPages;
+
+    const products = await Product.find(findProducts).limit(objectPagination.limitItems).skip(objectPagination.skip);
 
     // console.log(products);
 
@@ -40,6 +53,7 @@ module.exports.index = async (req, res) => {
         pageTitle: "Danh sách sản phẩm",
         products: products,
         filterStatus: filterStatus,
-        keyword: objectSearch.keyword
+        keyword: objectSearch.keyword,
+        pagination: objectPagination,
     })
 }

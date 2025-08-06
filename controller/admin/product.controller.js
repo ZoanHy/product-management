@@ -52,3 +52,26 @@ module.exports.index = async (req, res) => {
         pagination: objectPagination,
     })
 }
+
+// [GET] /admin/products/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    // console.log(req.params);
+    const { status, id } = req.params;
+
+    // await Product.findByIdAndUpdate(id, { availabilityStatus: status }, { new: true })
+    //     .then(product => {
+    //         if (!product) {
+    //             return res.status(404).send("Product not found");
+    //         }
+    //         res.redirect('back');
+    //     })
+    //     .catch(err => {
+    //         console.error(err);
+    //         res.status(500).send("Server error");
+    //     });
+
+    await Product.updateOne({ _id: id }, { availabilityStatus: status });
+
+    const previousPage = req.get('Referrer') || '/';
+    res.redirect(previousPage);
+}

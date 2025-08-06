@@ -54,13 +54,34 @@ block main
                             td= item.title
                             td #{item.price.toFixed(0)}$
                             td 
-                                if item.availabilityStatus === "In Stock"
-                                    a(href="#!" class="badge text-bg-success") Còn hàng
+                                if item.availabilityStatus == "In Stock"
+                                    a(
+                                        href="javascript:;" 
+                                        data-status=item.availabilityStatus
+                                        data-id=item.id
+                                        button-change-status
+                                        class="badge text-bg-success"
+                                    ) Còn hàng
                                 else
-                                    a(href="#!" class="badge text-bg-danger") Hết hàng
+                                    a(
+                                        href="javascript:;" 
+                                        data-status=item.availabilityStatus
+                                        data-id=item.id
+                                        button-change-status
+                                        class="badge text-bg-danger"
+                                    ) Hết hàng
                             td 
                                 button(class="btn btn-warning btn-sm") Sửa
                                 button(class="btn btn-danger btn-sm ms-2") Xóa
 
 
     +pagination(pagination)
+
+    form(
+        action=""
+        method="POST"
+        id="form-change-status"
+        data-path=`${prefixAdmin}/products/change-status`
+    )
+
+    script(src="/admin/js/product.js")

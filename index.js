@@ -2,6 +2,7 @@ require('dotenv').config()
 
 // Importing required modules
 const express = require('express')
+var methodOverride = require('method-override')
 const database = require('./config/database.js')
 
 const systemConfig = require('./config/system.js')
@@ -15,6 +16,9 @@ database.connect();
 
 const app = express()
 const port = process.env.PORT;
+
+// Overriding methods for PUT and DELETE
+app.use(methodOverride('_method'))
 
 // Setting up view engine
 app.set('views', './views')

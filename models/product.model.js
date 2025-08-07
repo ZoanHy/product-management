@@ -23,7 +23,8 @@ const productSchema = new mongoose.Schema({
     returnPolicy: String,
     minimumOrderQuantity: Number,
     thumbnail: String,
-    deleted: { type: Boolean, default: false }
+    deleted: { type: Boolean, default: false },
+    deletedAt: Date,
 });
 const Product = mongoose.model('Product', productSchema, "products");
 

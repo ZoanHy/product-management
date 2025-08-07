@@ -96,7 +96,7 @@ module.exports.deleteItem = async (req, res) => {
     console.log(id);
 
     // Xóa mềm
-    await Product.updateOne({ _id: id }, { deleted: true });
+    await Product.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() });
 
     // Xóa vĩnh viễn
     // await Product.deleteOne({ _id: id });

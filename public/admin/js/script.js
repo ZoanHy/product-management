@@ -110,12 +110,29 @@ if (formChangeMulti) {
 
         // console.log(inputsChecked);
 
+        const typeChange = e.target.elements.type.value;
+
+        console.log(typeChange);
+
+        if (typeChange === "Delete All") {
+            const isConfirm = confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm đã chọn không?');
+            if (!isConfirm) { return; }
+        }
+
         if (inputsChecked.length > 0) {
             let ids = [];
             const inputIds = formChangeMulti.querySelector('input[name="ids"]');
 
             inputsChecked.forEach(input => {
-                ids.push(input.value);
+                const id = input.value;
+
+                if (typeChange == 'Change Position') {
+                    const position = input.closest('tr').querySelector('input[name="position"]').value;
+                    // console.log(position);
+                    ids.push(`${id}-${position}`);
+                } else {
+                    ids.push(id);
+                }
             });
             // console.log(ids);
 

@@ -25,6 +25,7 @@ const productSchema = new mongoose.Schema({
     thumbnail: String,
     deleted: { type: Boolean, default: false },
     deletedAt: Date,
+    position: Number
 });
 const Product = mongoose.model('Product', productSchema, "products");
 

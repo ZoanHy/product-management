@@ -7,14 +7,17 @@ mixin form-change-multi(path)
         .d-flex.align-items-start
             .form-group
                 select(name="type" class="form-select")
+                    option(disabled seleted ) Chọn hành động
                     option(value="In Stock") Còn hàng
                     option(value="Out of Stock") Hết hàng
+                    option(value="Delete All") Xóa tất cả
+                    option(value="Change Position") Thay đổi vị trí
             .form-group
                 input(
                     type="text"
                     name="ids"
                     value=""
-                    class="form-control"
+                    class="form-control d-none"
                 )
             button(
                 type="submit"

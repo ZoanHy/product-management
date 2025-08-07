@@ -37,10 +37,13 @@ module.exports.index = async (req, res) => {
         limitItems: 5
     }, req.query, countProducts);
 
-    console.log(objectPagination);
+    // console.log(objectPagination);
 
 
-    const products = await Product.find(findProducts).limit(objectPagination.limitItems).skip(objectPagination.skip);
+    const products = await Product.find(findProducts)
+        .sort({ position: "desc" })
+        .limit(objectPagination.limitItems)
+        .skip(objectPagination.skip);
 
     // console.log(products);
 
@@ -81,6 +84,20 @@ module.exports.changeMulti = async (req, res) => {
         case "Out of Stock":
             await Product.updateMany({ _id: { $in: ids } }, { availabilityStatus: "Out of Stock" });
             break;
+        case "Delete All":
+            // Xóa mềm
+            await Product.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date() });
+            // Xóa vĩnh viễn
+            // await Product.deleteMany({ _id: { $in: ids } });
+            break;
+        case "Change Position":
+            // Chuyển đổi vị trí
+            for (const item of ids) {
+                let [id, position] = item.split("-");
+                position = parseInt(position);
+                await Product.updateOne({ _id: id }, { position: position });
+            }
+
     }
 
     const previousPage = req.get('Referrer') || '/';

@@ -64,6 +64,9 @@ module.exports.changeStatus = async (req, res) => {
     await Product.updateOne({ _id: id }, { availabilityStatus: status });
 
     const previousPage = req.get('Referrer') || '/';
+
+    req.flash('success', `Cập nhật trạng thái thành công!`);
+
     res.redirect(previousPage);
 }
 
@@ -80,15 +83,18 @@ module.exports.changeMulti = async (req, res) => {
     switch (type) {
         case "In Stock":
             await Product.updateMany({ _id: { $in: ids } }, { availabilityStatus: "In Stock" });
+            req.flash('success', `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`);
             break;
         case "Out of Stock":
             await Product.updateMany({ _id: { $in: ids } }, { availabilityStatus: "Out of Stock" });
+            req.flash('success', `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`);
             break;
         case "Delete All":
             // Xóa mềm
             await Product.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date() });
             // Xóa vĩnh viễn
             // await Product.deleteMany({ _id: { $in: ids } });
+            req.flash('success', `Xóa thành công ${ids.length} sản phẩm!`);
             break;
         case "Change Position":
             // Chuyển đổi vị trí
@@ -97,6 +103,8 @@ module.exports.changeMulti = async (req, res) => {
                 position = parseInt(position);
                 await Product.updateOne({ _id: id }, { position: position });
             }
+            req.flash('success', `Cập nhật vị trí thành công ${ids.length} sản phẩm!`);
+            break;
 
     }
 
@@ -114,6 +122,7 @@ module.exports.deleteItem = async (req, res) => {
 
     // Xóa mềm
     await Product.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() });
+    req.flash('success', `Xóa thành công sản phẩm!`);
 
     // Xóa vĩnh viễn
     // await Product.deleteOne({ _id: id });

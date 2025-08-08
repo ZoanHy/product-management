@@ -167,5 +167,27 @@ if (showAlert) {
     }
 }
 
-
 // End Show Alert
+
+// Upload Image
+
+const uploadImage = document.querySelector('[upload-image]');
+if (uploadImage) {
+    const uploadImageInput = uploadImage.querySelector('[upload-image-input]');
+    const uploadImagePreview = uploadImage.querySelector('[upload-image-preview]');
+
+    if (uploadImageInput) {
+        uploadImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    uploadImagePreview.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+}
+
+// End Upload Image

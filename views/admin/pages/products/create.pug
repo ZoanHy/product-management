@@ -1,6 +1,9 @@
 extends ../../layouts/default.pug
+include ../../mixins/alert.pug
 
 block main 
+    +alert-error(5000)
+
     h1(class="mt-4 mb-4") Thêm sản phẩm mới
 
     form(
@@ -16,7 +19,6 @@ block main
                 class="form-control" 
                 id="title" 
                 name="title" 
-                required
             )
         div(class="form-group")
             label(for='desc') Mô tả
@@ -88,6 +90,7 @@ block main
                 id="availabilityStatus" 
                 name="availabilityStatus" 
                 value="In Stock"
+                checked
             )
             label(for="availabilityStatus") Còn hàng
         div(class="form-group form-check form-check-inline")

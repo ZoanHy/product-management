@@ -205,3 +205,18 @@ module.exports.editPatch = async (req, res) => {
     req.flash('success', `Cập nhật sản phẩm thành công!`);
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 }
+
+// [GET] /admin/products/detail/:id
+module.exports.detailItem = async (req, res) => {
+    const id = req.params.id;
+    const product = await Product.findOne({ _id: id, deleted: false });
+    if (!product) {
+        req.flash('error', `Sản phẩm không tồn tại!`);
+        return res.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+
+    res.render("admin/pages/products/detail", {
+        pageTitle: product.title,
+        product: product
+    });
+}

@@ -1,0 +1,42 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-8
+        .card.shadow
+          if product.thumbnail
+            .text-center.mt-3
+              img.card-img-top.img-fluid.rounded(style="max-width: 220px; height: auto;", src=product.thumbnail, alt=product.title)
+          .card-body
+            h3.card-title.mb-3 #{product.title}
+            if product.description
+              p.card-text.mb-3 #{product.description}
+            ul.list-group.list-group-flush.mb-3
+              li.list-group-item
+                strong Giá: 
+                | #{product.price} $
+              if product.discountPercentage
+                li.list-group-item
+                  strong Giảm giá: 
+                  | #{product.discountPercentage}%
+              if product.stock !== undefined
+                li.list-group-item
+                  strong Số lượng: 
+                  | #{product.stock}
+              if product.availabilityStatus
+                li.list-group-item
+                  strong Trạng thái: 
+                  if product.availabilityStatus == 'In Stock'
+                    span.badge.bg-success.ms-2 Còn hàng
+                  else if product.availabilityStatus == 'Out of Stock'
+                    span.badge.bg-danger.ms-2 Hết hàng
+                  else
+                    span.badge.bg-secondary.ms-2 #{product.availabilityStatus}
+              if product.position !== undefined
+                li.list-group-item
+                  strong Vị trí: 
+                  | #{product.position}
+            .mt-4
+              a.btn.btn-secondary(href='/admin/products') Quay lại danh sách
+              a.btn.btn-warning.ms-2(href=`/admin/products/edit/${product._id}`) Sửa sản phẩm

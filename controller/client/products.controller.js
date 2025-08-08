@@ -19,3 +19,19 @@ module.exports.index = async (req, res) => {
         products: newProducts,
     });
 }
+
+// [GET] /products/:slug
+module.exports.viewDetail = async (req, res) => {
+    const slug = req.params.slug;
+
+    const product = await Product.findOne({ slug, deleted: false, availabilityStatus: "In Stock" });
+
+    if (!product) {
+        return res.status(404).render("404", { pageTitle: "Không tìm thấy sản phẩm" });
+    }
+
+    res.render("client/pages/products/detail", {
+        pageTitle: product.title,
+        product,
+    });
+};

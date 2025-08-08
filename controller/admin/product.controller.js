@@ -145,8 +145,6 @@ module.exports.createItem = async (req, res) => {
 module.exports.createPost = async (req, res) => {
     // Handle form submission
 
-
-
     req.body.price = parseFloat(req.body.price);
     req.body.discountPercentage = parseFloat(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
@@ -166,5 +164,44 @@ module.exports.createPost = async (req, res) => {
     await newProduct.save();
 
     req.flash('success', `Thêm sản phẩm thành công!`);
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+}
+
+// [GET] /admin/products/edit/:id
+module.exports.editItem = async (req, res) => {
+
+    const id = req.params.id;
+    const product = await Product.findOne({ _id: id, deleted: false });
+    if (!product) {
+        req.flash('error', `Sản phẩm không tồn tại!`);
+        return res.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+
+    res.render("admin/pages/products/edit", {
+        pageTitle: "Chỉnh sửa sản phẩm",
+        product: product
+    });
+}
+
+// [PATCH] /admin/products/edit/:id
+module.exports.editPatch = async (req, res) => {
+    req.body.price = parseFloat(req.body.price);
+    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.position = parseInt(req.body.position);
+
+    if (req.file) {
+        req.body.thumbnail = `/uploads/${req.file.filename}`;
+    }
+
+    try {
+        await Product.updateOne({ _id: req.params.id }, req.body);
+    } catch (error) {
+        console.error('Error updating product:', error);
+        req.flash('error', `Cập nhật sản phẩm thất bại!`);
+        return
+    }
+
+    req.flash('success', `Cập nhật sản phẩm thành công!`);
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 }

@@ -2,6 +2,7 @@ require('dotenv').config()
 
 // Importing required modules
 const express = require('express')
+var path = require('path');
 
 var methodOverride = require('method-override')
 
@@ -41,6 +42,8 @@ app.use(bodyParser.json())
 app.use(cookieParser('keyboard cat'));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
+
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 
 
 // App locals variables
